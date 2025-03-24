@@ -1,4 +1,4 @@
-# terraform-aws-platform
+# terraform aws platform
 
 > 🇺🇸 [View this in English](./README.md)
 
@@ -16,7 +16,7 @@ Terraform을 이용하여 AWS 기반 인프라를 코드로 자동화한 프로�
 - EKS 클러스터 (Private Endpoint Only)
 - Bastion Host를 통한 `kubectl` 접근
 - Fluent Bit 기반 로그 수집 및 CloudWatch 연동
-- (추가 예정정)
+- (추가 예정)
 
 <!-- 추후 아키텍처 다이어그램 이미지 삽입 예정 -->
 <!-- ![architecture](docs/architecture.png) -->
