@@ -28,3 +28,8 @@ variable "default_tags" {
 variable "cluster_name" {
     type = string
 }
+
+variable "region" {
+    type = string
+    default = "ap-northeast-2"
+}

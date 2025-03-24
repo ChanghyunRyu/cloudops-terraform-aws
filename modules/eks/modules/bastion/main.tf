@@ -109,6 +109,7 @@ data "template_file" "user_data" {
 
   vars = {
     cluster_name = var.cluster_name
+    region = var.region
   }
 }
 

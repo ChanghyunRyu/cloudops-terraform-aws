@@ -17,10 +17,7 @@ chmod +x /usr/local/bin/kubectl
 # eksctl 설치
 curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz" | tar xz -C /usr/local/bin
 
-# EC2의 지역 정보 가져오기
-REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r '.region')
-
 # kubeconfig 생성
-aws eks update-kubeconfig --name ${cluster_name} --region $REGION
+aws eks update-kubeconfig --name ${cluster_name} --region ${region}
 
 echo "✅ Bastion Host provisioning completed."
