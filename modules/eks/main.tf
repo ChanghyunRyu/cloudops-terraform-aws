@@ -28,9 +28,9 @@ module "node_group" {
 
     instance_types = var.instance_types
     disk_size = var.disk_size
-    desired_size = var.scaling_config['desired_size']
-    max_size = var.scaling_config['max_size']
-    min_size = var.scaling_config['min_size']
+    desired_size = var.scaling_config["desired_size"]
+    max_size = var.scaling_config["max_size"]
+    min_size = var.scaling_config["min_size"]
 }
 
 module "bastion" {
@@ -44,7 +44,7 @@ module "bastion" {
     cluster_name = module.cluster.eks_cluster_name
 
     instance_type = "t3.medium"
-    key_name = var.key_name
+    key_name = null
 
     default_tags = local.default_tags
 }

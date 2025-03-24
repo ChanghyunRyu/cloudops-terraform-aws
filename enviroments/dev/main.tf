@@ -40,10 +40,25 @@ module "vpc" {
         }
     }
 
-
     enable_peering = true
 
     peer_vpc_id = data.aws_vpc.shared_vpc.id
     peer_cidr_block = data.aws_vpc.shared_vpc.cidr_block
     peer_route_table_ids = data.aws_route_tables.shared_route_tables.ids
+}
+
+module "eks" {
+    source = "../../modules/eks"
+
+    name = "dev"
+    vpc_id = module.vpc.vpc_id
+    private_subnet_ids = module.vpc.private_subnet_ids
+    public_subnet_ids = module.vpc.public_subnet_ids
+
+    tags = {
+        Enviroment = "dev"
+    }
+
+    kubernetes_version = "1.32"
+    enable_bastion = true
 }

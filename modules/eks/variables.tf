@@ -11,7 +11,7 @@ variable "private_subnet_ids" {
 }
 
 variable "public_subnet_ids" {
-  type = list(stirng)
+  type = list(string)
 }
 
 variable "kubernetes_version" {

@@ -1,13 +1,9 @@
 output "public_subnet_ids" {
-    value = {
-        for az, subnet in aws_subnet.public : az => subnet.id
-    }
+    value = [for subnet in aws_subnet.public : subnet.id]
 }
 
 output "private_subnet_ids" {
-    value = {
-        for az, subnet in aws_subnet.private : az => subnet.id
-    }
+    value = [for subnet in aws_subnet.private : subnet.id]
 }
 
 output "nat_gateway_ids" {

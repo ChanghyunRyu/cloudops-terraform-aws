@@ -3,7 +3,7 @@
 ###############################################
 
 resource "aws_iam_role" "this" {
-    name = '${var.name}-bastion-role'
+    name = "${var.name}-bastion-role"
 
     assume_role_policy = jsonencode({
         Version = "2012-10-17"
