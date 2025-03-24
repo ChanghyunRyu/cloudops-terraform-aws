@@ -59,3 +59,23 @@ variable "custom_subnet_tags" {
   type = map(map(string))
   default = {}
 }
+
+varialbe "enable_peering" {
+  type = bool
+  default = false
+}
+
+variable "peer_connection_id" {
+  type = string
+  default = null
+}
+
+variable "peer_cidr_block" {
+  type = string
+  default = null
+}
+
+variable "peer_route_table_ids" {
+  type = list(string)
+  default = null
+}
