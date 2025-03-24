@@ -7,12 +7,12 @@ locals {
 
     public_subnet_cidrs = [
         for i in range(length(var.azs)) :
-        cidrsubnet(var.vpc_cidr_block, 8, i)
+        cidrsubnet(var.cidr_block, 8, i)
     ]
 
     private_subnet_cidrs = [
         for i in range(length(var.azs)) :
-        cidrsubnet(var.vpc_cidr_block, 8, i + 10)
+        cidrsubnet(var.cidr_block, 8, i + 10)
     ]
 
     nat_gateway_azs = var.single_nat_gateway ? [var.azs[0]] : var.azs

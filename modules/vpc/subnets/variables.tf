@@ -1,4 +1,4 @@
-varialbe "name" {
+variable "name" {
     type = string
 }
 
@@ -6,7 +6,7 @@ variable "azs" {
     type = list(string)
 }
 
-variable "public_subnet_ciders" {
+variable "public_subnet_cidrs" {
     type = list(string)
 }
 
@@ -18,15 +18,15 @@ variable "public_subnet_count" {
     type = number
 }
 
-variable "public_subnet_count" {
+variable "private_subnet_count" {
     type = number
 }
 
-varialbe "public_subnet_names" {
+variable "public_subnet_names" {
     type = list(string)
 }
 
-varialbe "private_subnet_names" {
+variable "private_subnet_names" {
     type = list(string)
 }
 
@@ -35,7 +35,7 @@ variable "public_subnet_tags" {
     default = {}
 }
 
-varialbe "private_subnet_tags" {
+variable "private_subnet_tags" {
     type = map(string)
     default = {}
 }
@@ -49,7 +49,7 @@ variable "enable_nat_gateway" {
     default = true
 }
 
-varialbe "single_nat_gateway" {
+variable "single_nat_gateway" {
     type = bool
     default = false
 }

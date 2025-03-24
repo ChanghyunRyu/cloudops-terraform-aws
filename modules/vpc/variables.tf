@@ -60,12 +60,12 @@ variable "custom_subnet_tags" {
   default = {}
 }
 
-varialbe "enable_peering" {
+variable "enable_peering" {
   type = bool
   default = false
 }
 
-variable "peer_connection_id" {
+variable "peer_vpc_id" {
   type = string
   default = null
 }

@@ -12,6 +12,6 @@ output "private_subnet_ids" {
 
 output "nat_gateway_ids" {
     value = {
-        fr az, nat in aws_nat_gateway.this : az => nat.id
+        for az, nat in aws_nat_gateway.this : az => nat.id
     }
 }

@@ -6,7 +6,7 @@
 resource "aws_subnet" "public" {
     for_each = {
         for idx, az in var.azs : az => {
-            cidr_block = var.public_subnet_ciders[idx]
+            cidr_block = var.public_subnet_cidrs[idx]
             name = var.public_subnet_names[idx]
         }
     }
@@ -27,9 +27,9 @@ resource "aws_subnet" "public" {
 # Private Subnets
 resource "aws_subnet" "private" {
     for_each = {
-        for idx, ax in var.azs : az => {
+        for idx, az in var.azs : az => {
             cidr_block = var.private_subnet_cidrs[idx]
-            name = var.private_subnet_names[ids]
+            name = var.private_subnet_names[idx]
         }
     }
 
@@ -52,7 +52,7 @@ resource "aws_subnet" "private" {
 
 # NAT Gateway EIP
 resource "aws_eip" "nat" {
-    for_each = var.enable_nat_gateway? toset(var.nat_gateway_azs) : {}
+    for_each = var.enable_nat_gateway ? toset(var.nat_gateway_azs) : toset([])
 
     domain = "vpc"
 
@@ -66,9 +66,9 @@ resource "aws_eip" "nat" {
 
 # NAT Gateway
 resource "aws_nat_gateway" "this" {
-    for_each = var.enable_nat_gateway ? toset(var.nat_gateway_azs) : {}
+    for_each = var.enable_nat_gateway ? toset(var.nat_gateway_azs) : toset([])
 
-    allocation_id = aws_eip.nat[each.key]
+    allocation_id = aws_eip.nat[each.key].id
     subnet_id = aws_subnet.public[each.key].id
 
     tags = merge(
@@ -89,7 +89,7 @@ resource "aws_route_table_association" "public" {
     for_each = aws_subnet.public
 
     subnet_id = each.value.id
-    route_table_ids = var.route_table_ids.public
+    route_table_id = var.route_table_ids.public
 }
 
 # Route Table Association (public)
@@ -97,7 +97,7 @@ resource "aws_route_table_association" "private" {
     for_each = aws_subnet.private
 
     subnet_id = each.value.id
-    route_table_ids = var.route_table_ids.private[each.key]
+    route_table_id = var.route_table_ids.private[each.key]
 }
 
 locals {
