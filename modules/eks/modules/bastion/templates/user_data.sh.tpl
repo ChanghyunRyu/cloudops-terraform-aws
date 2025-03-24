@@ -11,7 +11,7 @@ unzip -o awscliv2.zip
 export PATH=$PATH:/usr/local/bin
 
 # kubectl 1.32.0 설치
-curl -o /usr/local/bin/kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.32.0/2024-03-08/bin/linux/amd64/kubectl
+curl -o /usr/local/bin/kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.32.0/2024-12-20/bin/linux/amd64/kubectl
 chmod +x /usr/local/bin/kubectl
 
 # eksctl 설치
@@ -21,6 +21,6 @@ curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/d
 REGION=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r '.region')
 
 # kubeconfig 생성
-aws eks update-kubeconfig --region $REGION --name ${cluster_name}
+aws eks update-kubeconfig --name ${cluster_name} --region $REGION
 
 echo "✅ Bastion Host provisioning completed."

@@ -22,11 +22,36 @@ resource "aws_iam_role" "this" {
 resource "aws_iam_role_policy_attachment" "this" {
   for_each = toset([
     "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy",
-    "arn:aws:iam::aws:policy/AmazonEKSDescribePolicy",
-    "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
+    "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+    "arn:aws:iam::aws:policy/AmazonEKSServicePolicy",
+    "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
   ])
   role       = aws_iam_role.this.name
   policy_arn = each.value
+}
+
+resource "aws_iam_policy" "baston_describe_cluster_policy" {
+  name        = "eks-describe-cluster-policy"
+  description = "Policy to allow eks:DescribeCluster"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = [
+          "eks:DescribeCluster",
+          "sts:GetCallerIdentity"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "describe_attachment" {
+  role       = aws_iam_role.this.name
+  policy_arn = aws_iam_policy.baston_describe_cluster_policy.arn
 }
 
 resource "aws_iam_instance_profile" "this" {
