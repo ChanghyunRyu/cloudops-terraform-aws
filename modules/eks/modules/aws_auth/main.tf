@@ -13,7 +13,7 @@ resource "kubernetes_config_map" "aws_auth" {
     }
 
     data = {
-        mapRoles = yamlencode([var.role_mapping])
+        mapRoles = yamlencode(var.role_mapping)
     }
 
     lifecycle {

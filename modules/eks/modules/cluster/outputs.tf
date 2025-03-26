@@ -18,6 +18,10 @@ output "eks_cluster_certificate_authority" {
   value       = aws_eks_cluster.this.certificate_authority[0].data
 }
 
+output "kube_token" {
+  value       = data.aws_eks_cluster_auth.this.token
+}
+
 output "eks_oidc_issuer" {
     description = "OIDC Provider URL"
     value = aws_eks_cluster.this.identity[0].oidc[0].issuer

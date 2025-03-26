@@ -86,3 +86,7 @@ resource "aws_eks_cluster" "this" {
 
     tags = var.default_tags
 }
+
+data "aws_eks_cluster_auth" "this" {
+    name = aws_eks_cluster.this.name
+}

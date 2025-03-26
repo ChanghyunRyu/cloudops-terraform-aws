@@ -26,3 +26,11 @@ variable "cluster_enabled_log_types" {
     type = list(string)
     default = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
 }
+
+variable "node_group_role_arn" {
+  type = string
+}
+
+variable "bastion_role_arn" {
+  type = string
+}

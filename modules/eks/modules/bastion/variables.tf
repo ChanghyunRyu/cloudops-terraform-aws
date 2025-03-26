@@ -33,3 +33,7 @@ variable "region" {
     type = string
     default = "ap-northeast-2"
 }
+
+variable "bastion_role_name" {
+    type = string
+}

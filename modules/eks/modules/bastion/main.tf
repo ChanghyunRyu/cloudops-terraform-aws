@@ -2,23 +2,6 @@
 ####               IAM Role                ####
 ###############################################
 
-resource "aws_iam_role" "this" {
-    name = "${var.name}-bastion-role"
-
-    assume_role_policy = jsonencode({
-        Version = "2012-10-17"
-        Statement = [{
-            Effect = "Allow"
-            Principal = {
-            Service = "ec2.amazonaws.com"
-            }
-            Action = "sts:AssumeRole"
-        }]
-    })
-
-    tags = var.default_tags
-}
-
 resource "aws_iam_role_policy_attachment" "this" {
   for_each = toset([
     "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy",
@@ -26,7 +9,7 @@ resource "aws_iam_role_policy_attachment" "this" {
     "arn:aws:iam::aws:policy/AmazonEKSServicePolicy",
     "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
   ])
-  role       = aws_iam_role.this.name
+  role       = var.bastion_role_name
   policy_arn = each.value
 }
 
@@ -50,13 +33,13 @@ resource "aws_iam_policy" "baston_describe_cluster_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "describe_attachment" {
-  role       = aws_iam_role.this.name
+  role       = var.bastion_role_name
   policy_arn = aws_iam_policy.baston_describe_cluster_policy.arn
 }
 
 resource "aws_iam_instance_profile" "this" {
     name = "${var.name}-bastion-profile"
-    role = aws_iam_role.this.name
+    role = var.bastion_role_name
 }
 
 ###############################################
