@@ -47,14 +47,18 @@ variable "enable_bastion" {
   default = false
 }
 
-variable "scaling_config" {
+variable "node_group_config" {
   type = object({
+    instance_type = list(string)
+    disk_size = number
     desired_size = number
     max_size     = number
     min_size     = number
   })
 
   default = {
+    instance_type = ["t3.medium"]
+    disk_size = 30
     desired_size = 2
     max_size     = 6
     min_size     = 1

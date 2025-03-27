@@ -84,11 +84,11 @@ module "node_group" {
     node_group_role_name = aws_iam_role.node_group_role.name
     node_group_role_arn = aws_iam_role.node_group_role.arn
 
-    instance_types = var.instance_types
-    disk_size = var.disk_size
-    desired_size = var.scaling_config["desired_size"]
-    max_size = var.scaling_config["max_size"]
-    min_size = var.scaling_config["min_size"]
+    instance_types = var.node_group_config["instance_type"]
+    disk_size = var.node_group_config["disk_size"]
+    desired_size = var.node_group_config["desired_size"]
+    max_size = var.node_group_config["max_size"]
+    min_size = var.node_group_config["min_size"]
 
 }
 
@@ -171,7 +171,7 @@ provider "helm" {
 }
 
 ###############################################
-####              Clouwatch                ####
+####              Cloudwatch               ####
 ###############################################
 
 resource "aws_iam_role" "cloudwatch_irsa" {
