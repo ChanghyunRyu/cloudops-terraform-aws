@@ -19,5 +19,8 @@ curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/d
 
 # kubeconfig 생성
 aws eks update-kubeconfig --name ${cluster_name} --region ${region}
+mkdir -p /home/ec2-user/.kube
+cp -i /root/.kube/config /home/ec2-user/.kube/config
+chown -R ec2-user:ec2-user /home/ec2-user/.kube
 
 echo "✅ Bastion Host provisioning completed."

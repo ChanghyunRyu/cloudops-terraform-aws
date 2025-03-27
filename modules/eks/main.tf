@@ -28,6 +28,30 @@ module "cluster" {
     bastion_role_arn = aws_iam_role.bastion_role.arn
 }
 
+# These blocks are for configuration of EKS
+module "aws_auth" {
+  source = "./modules/aws_auth"
+
+  providers = {
+    kubernetes = kubernetes
+  }
+
+  role_mapping = [
+    {
+      rolearn  = aws_iam_role.bastion_role.arn
+      username = "admin:bastion"
+      groups   = ["system:masters"]
+    },
+    {
+      rolearn  = aws_iam_role.node_group_role.arn
+      username = "system:node:{{EC2PrivateDNSName}}"
+      groups   = ["system:bootstrappers", "system:nodes"]
+    }
+  ]
+
+  depends_on = [module.cluster]
+}
+
 ###############################################
 ####              Node Group               ####
 ###############################################
@@ -139,29 +163,39 @@ provider "kubernetes" {
 }
 
 ###############################################
-####              EKS tools                ####
+####              Clouwatch                ####
 ###############################################
 
-# These blocks are for configuration of EKS
-module "aws_auth" {
-  source = "./modules/aws_auth"
+resource "aws_iam_role" "cloudwatch_irsa" {
+  name = "${var.name}-cloudwatch-irsa"
 
-  providers = {
-    kubernetes = kubernetes
-  }
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [{
+      Effect = "Allow",
+      Principal = {
+        Federated = aws_iam_openid_connect_provider.eks.arn
+      },
+      Action = "sts:AssumeRoleWithWebIdentity",
+      Condition = {
+        StringEquals = {
+          "${replace(data.aws_eks_cluster.this.identity[0].oidc[0].issuer, "https://", "")}:sub" = "system:serviceaccount:amazon-cloudwatch:cloudwatch-agent"
+        }
+      }
+    }]
+  })
+}
 
-  role_mapping = [
-    {
-      rolearn  = aws_iam_role.bastion_role.arn
-      username = "admin:bastion"
-      groups   = ["system:masters"]
-    },
-    {
-      rolearn  = aws_iam_role.node_group_role.arn
-      username = "system:node:{{EC2PrivateDNSName}}"
-      groups   = ["system:bootstrappers", "system:nodes"]
-    }
-  ]
+module "eks_cloudwatch" {
+  source = "./modules/eks-cloudwatch"
 
-  depends_on = [module.cluster]
+  name = var.name
+  addon_version = "v3.5.0-eksbuild.1"
+  cluster_name = module.cluster.eks_cluster_name
+  irsa_role_arn = aws_iam_role.cloudwatch_irsa.arn
+  irsa_role_name = aws_iam_role.cloudwatch_irsa.name
+
+  dependency = module.node_group
+
+  default_tags = local.default_tags
 }

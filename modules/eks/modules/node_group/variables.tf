@@ -14,6 +14,14 @@ variable "default_tags" {
     type = map(string)
 }
 
+variable "node_group_role_name" {
+    type = string
+}
+
+variable "node_group_role_arn" {
+    type = string
+}
+
 variable "instance_types" {
     type = list(string)
     default = ["t3.medium"]
