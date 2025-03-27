@@ -6,6 +6,11 @@ variable "vpc_id" {
   type = string
 }
 
+variable "region" {
+  type = string
+  default = "ap-northeast-2"
+}
+
 variable "private_subnet_ids" {
   type = list(string)
 }

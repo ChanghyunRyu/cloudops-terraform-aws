@@ -162,6 +162,14 @@ provider "kubernetes" {
     token = module.cluster.kube_token
 }
 
+provider "helm" {
+  kubernetes {
+    host = module.cluster.eks_cluster_endpoint
+    cluster_ca_certificate = base64decode(module.cluster.eks_cluster_certificate_authority)
+    token = module.cluster.kube_token
+  }
+}
+
 ###############################################
 ####              Clouwatch                ####
 ###############################################
@@ -198,4 +206,46 @@ module "eks_cloudwatch" {
   dependency = module.node_group
 
   default_tags = local.default_tags
+}
+
+###############################################
+####            lb-controller              ####
+###############################################
+
+data "aws_iam_policy_document" "lb_assume_role_policy" {
+  statement {
+    effect = "Allow"
+    principals {
+      type        = "Federated"
+      identifiers = [aws_iam_openid_connect_provider.eks.arn]
+    }
+
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(aws_iam_openid_connect_provider.eks.url, "https://", "")}:sub"
+      values   = ["system:serviceaccount:kube-system:aws-load-balancer-controller"]
+    }
+  }
+}
+
+resource "aws_iam_role" "lb_controller_irsa" {
+  name               = "${var.name}-lb-controller-irsa"
+  assume_role_policy = data.aws_iam_policy_document.lb_assume_role_policy.json
+}
+
+module "lb_controller" {
+  source = "./modules/eks-lb-controller"
+
+  providers = {helm = helm}
+
+  name = var.name
+  cluster_name = module.cluster.eks_cluster_name
+  vpc_id = var.vpc_id
+  region = var.region
+  service_account_name = "${var.name}-aws-load-balancer-controller"
+  
+  lb_controller_irsa_name = aws_iam_role.lb_controller_irsa.name
+  lb_controller_irsa_arn = aws_iam_role.lb_controller_irsa.arn
 }
