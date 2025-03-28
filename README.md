@@ -1,57 +1,61 @@
-# terraform aws platform
+# cloudops-terraform-aws
 
-> 🇰🇷 [한국어로 보기](./README.ko.md)
+🇰🇷  이 문서의 [한국어 버전](README.ko.md)을 보시려면 클릭하세요.
 
-This project automates AWS infrastructure using Terraform.  
-Each environment (`dev`, `prod`, `shared`) is managed independently with isolated configurations. All infrastructure components are modularized for reusability and maintainability.
+## Overview
 
----
+- This is a template project designed to provision shared / dev / prod environments using Terraform in an automated and structured manner.
+- It is built on custom Terraform modules to configure key AWS resources such as VPC, EKS, S3, IAM, CloudWatch, and ArgoCD. The structure is intended to be extensible for future components.
+- The overall architecture is designed with real-world production environments in mind, emphasizing modularity and environment separation. Some configurations may require adjustment depending on the target project.
 
-## 📐 Architecture Overview
+## Project Structure
 
-This project automates the provisioning of the following AWS infrastructure components:
+### Architecture Diagram
 
-- VPC and Subnet structure (Public and Private Subnets)
-- NAT Gateways and Route Table configuration
-- EKS Cluster with Private Endpoint only
-- Bastion Host for secure `kubectl` access
-- Fluent Bit for log collection and integration with CloudWatch
-- (More to be added)
+![Image](https://github.com/user-attachments/assets/2f25c365-418b-4e58-bc80-92d7c4bc634b)
 
-<!-- Architecture diagram image will be added later -->
-<!-- ![architecture](docs/architecture.png) -->
+### Directory Layout
 
----
+```
+modules/
+├── vpc/
+├── eks/
+├── s3/
+└── ...
 
-## 🧱 Module Overview
+environments/
+├── shared/
+├── dev/
+└── prod/
+```
 
-This project is composed of the following Terraform modules:
+### Environment Separation Strategy
 
-### `modules/vpc`
-- Creates VPC, Internet Gateway, NAT Gateway, subnets, and route tables
-- Supports automatic CIDR splitting
-- Includes a separate submodule `modules/vpc/modules/peering` for VPC peering
-
-### `modules/eks`
-- Creates an EKS cluster with private-only endpoint
-- Manages IAM roles and security groups
-- Uses the Helm Provider to install Fluent Bit, AWS Load Balancer Controller, and other EKS tools
-
-### `modules/security_group`
-- Defines reusable security groups
-- Configurable for EKS, Bastion Hosts, and other resources
-
-For more details, refer to the `README.md` in each module directory.
+- **VPC Isolation**: Each environment (shared / dev / prod) resides in a separate VPC.
+- **VPC Peering**: Peering is configured between dev-shared and prod-shared environments.
 
 ---
 
-## 🔧 Environment Directory Structure
+## Usage
 
-```bash
-terraform-aws-platform/
-├── modules/                # Reusable Terraform modules
-├── environments/
-│   ├── dev/                # Development environment
-│   ├── shared/             # Shared infrastructure (e.g., base VPC)
-│   └── prod/               # Production environment
-└── README.md
+For detailed usage instructions, refer to the README files under each environment directory (e.g., `environments/dev`). Please follow the deployment order carefully to prevent potential issues during resource teardown.
+
+```
+cd environments/shared
+./deploy.sh
+```
+
+### Requirements
+
+- Terraform >= 1.x
+- AWS CLI configured
+- Sufficient AWS IAM permissions (e.g., VPC, EKS, S3 resource creation)
+
+### Considerations
+
+| Item             | Notes                                                                 |
+|------------------|-----------------------------------------------------------------------|
+| Estimated Time   | TBD (to be added later)                                              |
+| Cost Estimate    | TBD (to be added later)                                              |
+| IAM Permissions  | Admin-level for setup; follow least-privilege for operation          |
+| State Management | Separate state files per environment; state is not shared            |

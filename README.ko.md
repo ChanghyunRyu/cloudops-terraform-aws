@@ -1,58 +1,61 @@
-# terraform aws platform
+# cloudops-terraform-aws
 
-> 🇺🇸 [View this in English](./README.md)
+🇺🇸 Click here(README.md) to view this document in English.
 
-Terraform을 이용하여 AWS 기반 인프라를 코드로 자동화한 프로젝트입니다.  
-개별 환경(`dev`, `prod`, `shared`)은 분리된 구성을 통해 독립적으로 관리되며, 모든 인프라는 모듈화되어 재사용 가능한 형태로 설계되어 있습니다.
+## 개요
 
----
+- Terraform을 이용해 shared/ dev/ prod 환경을 자동화된 방식으로 구성하기 위한 템플릿 프로젝트입니다.
+- 직접 작성한 모듈을 기반으로 VPC, EKS, S3, IAM, CloudWatch, ArgoCD 등을 설정하며, 구성요소는 향후 확장될 수 있습니다.
+- 상기 기술 구성을 실무 환경에서 적용할 것을 가정하고 구성했으며, 기본적인 환경 분리 및 모듈화를 통해 실무에 근접한 구조로 구현했습니다. 일부 구성은 프로젝트에 맞게 조정이 필요할 수 있습니다.
 
-## 📐 프로젝트 아키텍처 개요
+## 구성 구조
 
-이 프로젝트는 다음과 같은 인프라 구성 요소를 자동화합니다:
+### # 아키텍처 다이어그램
 
-- VPC 및 서브넷 구조 (Public, Private Subnet 분리)
-- NAT Gateway 및 Route Table 자동 구성
-- EKS 클러스터 (Private Endpoint Only)
-- Bastion Host를 통한 `kubectl` 접근
-- Fluent Bit 기반 로그 수집 및 CloudWatch 연동
-- (추가 예정)
+![Image](https://github.com/user-attachments/assets/2f25c365-418b-4e58-bc80-92d7c4bc634b)
 
-<!-- 추후 아키텍처 다이어그램 이미지 삽입 예정 -->
-<!-- ![architecture](docs/architecture.png) -->
+### # 디렉토리 구조
 
----
+~~~
+modules/
+├── vpc/
+├── eks/
+├── s3/
+└── ...
 
-## 🧱 모듈 구성 개요
+environments/
+├── shared/
+├── dev/
+└── prod/
+~~~
 
-이 프로젝트는 다음과 같은 Terraform 모듈로 구성되어 있습니다:
+### # 환경 분리 전략
 
-### `modules/vpc`
-- VPC, IGW, NAT Gateway, 서브넷 및 라우팅 자동 생성
-- CIDR 자동 분할 기능 제공
-- VPC 피어링 기능은 `modules/vpc/modules/peering` 하위 모듈로 분리
-
-### `modules/eks`
-- EKS 클러스터 자동 생성
-- private-only endpoint 구성
-- IAM Role, Security Group 자동 설정
-- Helm Provider를 통해 EKS 상에 Fluent Bit, AWS Load Balancer Controller 등의 도구 자동 배포
-
-### `modules/security_group`
-- 재사용 가능한 SG 구성 정의
-- EKS, Bastion Host 등에 맞춤 설정 가능
-
-각 모듈과 하위 모듈에 대한 상세한 설명은 해당 모듈 디렉토리의 `README.md`에 포함되어 있습니다.
+- VPC 분리: shared / dev / prod는 각기 다른 VPC에 구성
+- VPC Peering: dev-shared, prod-shared 간 통신 연결
 
 ---
 
-## 🔧 환경별 디렉토리 구조
+## 사용 방법
 
-```bash
-terraform-aws-platform/
-├── modules/                # 재사용 가능한 모듈 정의
-├── environments/
-│   ├── dev/                # 개발 환경 구성
-│   ├── shared/             # 공통 인프라(VPC 등)
-│   └── prod/               # 운영 환경 구성
-└── README.md
+각 환경 별 자세한 사용법은 environments/ 환경 디렉토리의 README를 참고해주세요. 정해진 순서대로 배포하지 않을 경우, 환경 삭제 시에 문제가 발생할 수 있습니다.
+~~~
+cd environments/shared
+./deploy.sh
+~~~
+
+### # 요구 조건
+
+- Terraform >= 1.x
+- AWS CLI 설정 
+- AWS IAM 권한 (VPC, EKS, S3 등 생성 가능 수준)
+
+### # 사전 고려 사항
+
+| 항목     | 비고              |
+| ------ | --------------- |
+| 소요 시간  | TBD (추후 추가)     |
+| 비용 예측  | TBD (추후 추가)     |
+| IAM 권한 | 관리자 수준 또는 제한 명시 |
+| State 관리 | 환경별로 상태파일 분리, 같은 state를 공유하지 않음|
+
