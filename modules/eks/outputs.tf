@@ -10,10 +10,10 @@ output "eks_cluster_certificate_authority" {
     value = module.cluster.eks_cluster_certificate_authority
 }
 
-output "eks_cluster_token" {
-    value = module.cluster.kube_token
-}
-
 output "oidc_provider_url" {
     value = aws_iam_openid_connect_provider.eks.url
+}
+
+output "node_group_role_arn" {
+    value = aws_iam_role.node_group_role.arn
 }

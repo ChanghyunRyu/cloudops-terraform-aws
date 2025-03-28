@@ -57,8 +57,49 @@ module "eks" {
 
     tags = {
         Enviroment = "dev"
+        Terraform = "true"
     }
 
     kubernetes_version = "1.32"
+
+    node_group_config = {
+        instance_type = ["t3.medium"]
+        disk_size = 30
+        desired_size = 2
+        min_size     = 1
+        max_size     = 6
+    }
+}
+
+module "eks_resource" {
+    source = "../../modules/eks-resource"
+
+    name = "dev"
+    vpc_id = module.vpc.vpc_id
+    
+    tags = {
+        Enviroment = "dev"
+        Terraform = "true"
+    }
+
+    eks_cluster_name = module.eks.eks_cluster_name
+    eks_cluster_certificate_authority = module.eks.eks_cluster_certificate_authority
+    eks_cluster_endpoint = module.eks.eks_cluster_endpoint
+
+    node_group_role_arn = module.eks.node_group_role_arn
+
     enable_bastion = true
+    subnet_id = module.vpc.public_subnet_ids[0]
+    region = "ap-northeast-2"
+}
+
+module "argocd" {
+    source = "../../modules/argocd"
+
+    eks_cluster_name = module.eks.eks_cluster_name
+    eks_cluster_certificate_authority = module.eks.eks_cluster_certificate_authority
+    eks_cluster_endpoint = module.eks.eks_cluster_endpoint
+
+    install_argocd = true
+    application_yamls = []
 }

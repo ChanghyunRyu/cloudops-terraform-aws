@@ -7,6 +7,13 @@ It combines several submodules to provision a complete EKS infrastructure, inclu
 
 ## 🚀 Usage
 
+### ⚠️ Important Notes
+
+> **This module creates only the EKS cluster and managed node groups.**  
+> To use additional features such as IAM roles, service accounts, logging, or controllers inside the cluster, please use it in combination with the `eks_resource` module.
+> **Terraform recommends separating EKS infrastructure and in-cluster resources.**  
+> For safe teardown, always destroy the `eks_resource` module first (using `-target` if necessary), and then destroy the `eks` module.
+
 ```hcl
 module "eks" {
   source = "./eks"
