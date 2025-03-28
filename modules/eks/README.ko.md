@@ -1,6 +1,6 @@
 # EKS Module
 
-🇺🇸 Click here(README.md) to view this document in English.
+🇺🇸 [Click here](README.md) to view this document in English.
 
 EKS 클러스터 환경을 자동으로 구성하기 위한 상위 모듈입니다.  
 하위 모듈들을 조합하여 클러스터, 노드 그룹, IAM 인증 구성, Bastion Host, CloudWatch 통합, Load Balancer Controller까지 포함한 EKS 인프라를 구성합니다.

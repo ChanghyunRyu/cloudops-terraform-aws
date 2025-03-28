@@ -4,17 +4,17 @@
 
 ## Overview
 
-- This is a template project designed to provision shared / dev / prod environments using Terraform in an automated and structured manner.
+- This is a template project designed to provision `shared` / `dev` / `prod` environments using Terraform in an automated and structured manner.
 - It is built on custom Terraform modules to configure key AWS resources such as VPC, EKS, S3, IAM, CloudWatch, and ArgoCD. The structure is intended to be extensible for future components.
 - The overall architecture is designed with real-world production environments in mind, emphasizing modularity and environment separation. Some configurations may require adjustment depending on the target project.
 
 ## Project Structure
 
-### Architecture Diagram
+### # Architecture Diagram
 
-![Image](https://github.com/user-attachments/assets/2f25c365-418b-4e58-bc80-92d7c4bc634b)
+![Image](https://github.com/user-attachments/assets/2f622f64-0c0a-4a23-857c-6ee5e5b82433)
 
-### Directory Layout
+### # Directory Layout
 
 ```
 modules/
@@ -29,7 +29,7 @@ environments/
 └── prod/
 ```
 
-### Environment Separation Strategy
+### # Environment Separation Strategy
 
 - **VPC Isolation**: Each environment (shared / dev / prod) resides in a separate VPC.
 - **VPC Peering**: Peering is configured between dev-shared and prod-shared environments.
@@ -45,13 +45,13 @@ cd environments/shared
 ./deploy.sh
 ```
 
-### Requirements
+### # Requirements
 
 - Terraform >= 1.x
 - AWS CLI configured
 - Sufficient AWS IAM permissions (e.g., VPC, EKS, S3 resource creation)
 
-### Considerations
+### # Considerations
 
 | Item             | Notes                                                                 |
 |------------------|-----------------------------------------------------------------------|

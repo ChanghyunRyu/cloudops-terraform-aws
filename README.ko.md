@@ -1,6 +1,6 @@
 # cloudops-terraform-aws
 
-🇺🇸 Click here(README.md) to view this document in English.
+🇺🇸 [Click here](README.md) to view this document in English.
 
 ## 개요
 
@@ -12,7 +12,7 @@
 
 ### # 아키텍처 다이어그램
 
-![Image](https://github.com/user-attachments/assets/2f25c365-418b-4e58-bc80-92d7c4bc634b)
+![Image](https://github.com/user-attachments/assets/2f622f64-0c0a-4a23-857c-6ee5e5b82433)
 
 ### # 디렉토리 구조
 
