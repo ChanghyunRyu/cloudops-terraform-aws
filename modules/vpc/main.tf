@@ -1,3 +1,4 @@
+# VPC 및 라우팅을 정의하는 네트워크 모듈
 module "networking" {
     source = "./networking"
 
@@ -10,6 +11,8 @@ module "networking" {
     azs = var.azs
 }
 
+# 퍼블릭/프라이빗 서브넷 및 NAT Gateway 구성
+# depends on: module.networking.vpc_id, igw_id, route_table_ids
 module "subnets" {
     source = "./subnets"
 
@@ -36,6 +39,8 @@ module "subnets" {
     default_tags = local.default_tags
 }
 
+# 외부 VPC와의 Peering 연결 구성 (조건부 생성)
+# depends on: module.networking.vpc_id, route_table_ids.private
 module "peering" {
     count = var.enable_peering ? 1 : 0
     
